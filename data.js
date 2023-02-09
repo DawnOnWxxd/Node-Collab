@@ -1,4 +1,4 @@
-const people = [
+let people = [
     {id:1, name:"AAA"},
     {id:2, name:"BBB"},
     {id:3, name:"CCC"},
@@ -6,4 +6,11 @@ const people = [
     {id:5, name:"EEE"},
 ]
 
-module.exports = {people};
+const add = (name)=>{
+    const id_ = people.length + 1
+    people.push({id:id_, name:`${name}`})
+    
+}
+
+
+module.exports = {people,add};
