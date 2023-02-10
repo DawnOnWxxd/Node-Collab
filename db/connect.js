@@ -1,1 +1,9 @@
-const connectionstring = 'mongodb+srv://dawn:<password>@cluster0.mkp9mh2.mongodb.net/?retryWrites=true&w=majority'
+const mongoose = require('mongoose')
+
+const connectDB = (URI) => {
+    return mongoose
+    .set('strictQuery',true)
+    .connect(URI)
+}
+
+module.exports = {connectDB};
