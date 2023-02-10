@@ -53,9 +53,33 @@ const getReqSingle = async (req,res)=>{
 }
 
 
-const patchReq = (req,res)=>{
-    console.log("PATCH REQ")
-    res.send(`PATCH REQ --id-${req.params.id}`)
+const patchReq = async (req,res)=>{
+    try {
+        const {id:updateID} = req.params
+        if(!updateID){
+            return res
+            .status(400)
+            .json({status:"NO", data:"Please provide ID"})
+       }
+
+        const findTask = await schemaModel.findOne({ _id: updateID })
+        if(!findTask){return res
+            .status(404)
+            .json({Error:`No task found with ID: ${updateID}`})
+        }
+    
+        const {completed:updateData} = req.body
+        await schemaModel.updateOne({ _id: updateID }, {completed: updateData})
+        const updatedTask = await schemaModel.findOne({ _id: updateID })
+        res
+        .status(201)
+        .json({updatedTask})
+
+    } catch (error) {
+        res
+        .status(500)
+        .json(error)
+    }
 }
 
 const deleteReq = async (req,res)=>{
@@ -66,7 +90,10 @@ try {
         .status(400)
         .json({status:"NO", data:"Please provide ID"})
    }
-
+   const findTask = await schemaModel.findOne({ _id: deleteID })
+   if(!findTask){return res
+    .status(404)
+    .json({Error:`No task found with ID: ${deleteID}`})}
    await schemaModel.deleteOne({ _id:deleteID })
    const allTasks = await schemaModel.find({})
    res
